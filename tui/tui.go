@@ -74,7 +74,7 @@ func CreateUI(
 			UseColors:        useColors,
 			ShowApparentSize: showApparentSize,
 			ShowRelativeSize: showRelativeSize,
-			Analyzer:         analyze.CreateAnalyzer(),
+			Analyzer:         analyze.CreateStoredAnalyzer(),
 			ConstGC:          constGC,
 			UseSIPrefix:      useSIPrefix,
 		},
