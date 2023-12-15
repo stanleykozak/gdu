@@ -93,7 +93,6 @@ func (ui *UI) handleInfoPageEvents(key *tcell.EventKey) *tcell.EventKey {
 		case '?':
 			return nil
 		}
-
 		if key.Key() == tcell.KeyUp ||
 			key.Key() == tcell.KeyDown ||
 			key.Rune() == 'j' ||
@@ -193,10 +192,6 @@ func (ui *UI) handleMainActions(key *tcell.EventKey) *tcell.EventKey {
 		ui.handleDelete(false)
 	case 'e':
 		ui.handleDelete(true)
-	case 'v':
-		ui.showFile()
-	case 'o':
-		ui.openItem()
 	case 'i':
 		ui.showInfo()
 	case 'a':
@@ -308,3 +303,10 @@ func (ui *UI) handleMark() {
 
 	ui.fileItemMarked(row)
 }
+
+
+// 
+// case 'v':
+// 		ui.showFile()
+// 	case 'o':
+// 		ui.openItem()

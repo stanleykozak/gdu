@@ -112,12 +112,17 @@ func CreateUI(
 
 	var textColor, textBgColor tcell.Color
 	if ui.UseColors {
-		textColor = tcell.NewRGBColor(0, 0, 0)
-		textBgColor = tcell.NewRGBColor(36, 121, 208)
+		textColor = tcell.NewRGBColor(210, 210, 210)
+textBgColor = tcell.NewRGBColor(60 ,22 ,100)
+// textBgColor = tcell.NewRGBColor(127 ,0 ,0)
 	} else {
-		textColor = tcell.NewRGBColor(0, 0, 0)
-		textBgColor = tcell.NewRGBColor(255, 255, 255)
+		textColor = tcell.NewRGBColor(210, 210, 210)
+		// textBgColor = tcell.NewRGBColor(255, 255, 255)
+	textBgColor = tcell.NewRGBColor(60,22,100)
 	}
+
+
+
 
 	ui.header = tview.NewTextView()
 	ui.header.SetText(" gdu ~ Use arrow keys to navigate, press ? for help ")
@@ -295,11 +300,13 @@ func (ui *UI) confirmDeletionSelected(shouldEmpty bool) {
 		})
 
 	if !ui.UseColors {
-		modal.SetBackgroundColor(tcell.ColorGray)
+		modal.SetBackgroundColor(tcell.NewRGBColor(20,20,20))
 	} else {
-		modal.SetBackgroundColor(tcell.ColorBlack)
+		modal.SetBackgroundColor(tcell.NewRGBColor(20,20,20))
 	}
-	modal.SetBorderColor(tcell.ColorDefault)
-
+	modal.SetBorderColor(tcell.NewRGBColor(20,20,20))
+	// tcell.ColorDefault)
+							
+ // ui.header.SetBackgroundColor(textBgColor)
 	ui.pages.AddPage("confirm", modal, true, true)
 }

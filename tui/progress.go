@@ -8,9 +8,9 @@ import (
 )
 
 func (ui *UI) updateProgress() {
-	color := "[white:black:b]"
+	color := "[white:red:b]"
 	if ui.UseColors {
-		color = "[red:black:b]"
+		color = "[red::b]"
 	}
 
 	progressChan := ui.Analyzer.GetProgressChan()
@@ -30,16 +30,16 @@ func (ui *UI) updateProgress() {
 			delta := time.Since(start).Round(time.Second)
 
 			ui.app.QueueUpdateDraw(func() {
-				ui.progress.SetText("Total items: " +
+				ui.progress.SetText("[white::-] Total items: " +
 					color +
 					common.FormatNumber(int64(itemCount)) +
-					"[white:black:-], size: " +
+					"[white::-], size: " +
 					color +
 					ui.formatSize(totalSize, false, false) +
-					"[white:black:-], elapsed time: " +
+					"[white::-], elapsed time: " +
 					color +
 					delta.String() +
-					"[white:black:-]\nCurrent item: [white:black:b]" +
+					"[white::-]\nCurrent item: [white::b]" +
 					path.ShortenPath(currentItem, ui.currentItemNameMaxLen))
 			})
 		}(progress.ItemCount, progress.TotalSize, progress.CurrentItemName)

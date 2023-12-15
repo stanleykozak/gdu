@@ -11,43 +11,41 @@ import (
 	"github.com/dundee/gdu/v5/build"
 )
 
-const helpText = `     [::b]up/down, k/j    [white:black:-]Move cursor up/down
-  [::b]pgup/pgdn, g/G     [white:black:-]Move cursor top/bottom
- [::b]enter, right, l     [white:black:-]Go to directory/device
-         [::b]left, h     [white:black:-]Go to parent directory
-
-               [::b]r     [white:black:-]Rescan current directory
-               [::b]/     [white:black:-]Search items by name
-               [::b]a     [white:black:-]Toggle between showing disk usage and apparent size
-               [::b]B     [white:black:-]Toggle bar alignment to biggest file or directory
-               [::b]c     [white:black:-]Show/hide file count
-               [::b]m     [white:black:-]Show/hide latest mtime
-               [::b]b     [white:black:-]Spawn shell in current directory
-               [::b]q     [white:black:-]Quit gdu
-               [::b]Q     [white:black:-]Quit gdu and print current directory path
-
-Item under cursor:
-               [::b]d     [white:black:-]Delete file or directory
-               [::b]e     [white:black:-]Empty file or directory
-			   [::b]space [white:black:-]Mark file or directory for deletion
-               [::b]v     [white:black:-]Show content of file
-               [::b]o     [white:black:-]Open file or directory in external program
-               [::b]i     [white:black:-]Show info about item
-
-Sort by (twice toggles asc/desc):
-               [::b]n     [white:black:-]Sort by name (asc/desc)
-               [::b]s     [white:black:-]Sort by size (asc/desc)
-               [::b]C     [white:black:-]Sort by file count (asc/desc)
-               [::b]M     [white:black:-]Sort by mtime (asc/desc)`
-
-func (ui *UI) showDir() {
-	var (
-		totalUsage int64
-		totalSize  int64
-		maxUsage   int64
-		maxSize    int64
-		itemCount  int
-	)
+const helpText =   
+`      [::b]up/down, k/j     [white:black:-]Move cursor up/down
+    [::b]pgup/pgdn, g/G     [white:black:-]Move cursor top/bottom
+   [::b]enter, right, l     [white:black:-]Go to directory/device
+           [::b]left, h     [white:black:-]Go to parent directory
+  
+                 [::b]r     [white:black:-]Rescan current directory
+                 [::b]/     [white:black:-]Search items by name
+                 [::b]a     [white:black:-]Toggle between showing disk usage and apparent size
+                 [::b]B     [white:black:-]Toggle bar alignment to biggest file or directory
+                 [::b]c     [white:black:-]Show/hide file count
+                 [::b]m     [white:black:-]Show/hide latest mtime
+                 [::b]q     [white:black:-]Quit gdu
+                 [::b]Q     [white:black:-]Quit gdu and print current directory path
+  
+  Item under cursor:
+                 [::b]d     [white:black:-]Delete file or directory
+                 [::b]e     [white:black:-]Empty file or directory
+  			   [::b]space [white:black:-]Mark file or directory for deletion
+                 [::b]i     [white:black:-]Show info about item
+  
+  Sort by (twice toggles asc/desc):
+                 [::b]n     [white:black:-]Sort by name (asc/desc)
+                 [::b]s     [white:black:-]Sort by size (asc/desc)
+                 [::b]C     [white:black:-]Sort by file count (asc/desc)
+                 [::b]M     [white:black:-]Sort by mtime (asc/desc)`
+  
+  func (ui *UI) showDir() {
+  	var (
+  		totalUsage int64
+  		totalSize  int64
+  		maxUsage   int64
+  		maxSize    int64
+  		itemCount  int
+  	)
 
 	ui.currentDirPath = ui.currentDir.GetPath()
 
@@ -74,7 +72,7 @@ func (ui *UI) showDir() {
 			prefix += "  "
 		}
 
-		cell := tview.NewTableCell(prefix + "[::b]/..")
+		cell := tview.NewTableCell(prefix + "[::b]")
 		cell.SetReference(ui.currentDir.GetParent())
 		cell.SetStyle(tcell.Style{}.Foreground(tcell.ColorDefault))
 		ui.table.SetCell(0, 0, cell)
@@ -126,13 +124,15 @@ func (ui *UI) showDir() {
 
 	var footerNumberColor, footerTextColor string
 	if ui.UseColors {
-		footerNumberColor = "[#ffffff:#2479d0:b]"
-		footerTextColor = "[black:#2479d0:-]"
+		footerNumberColor = "[white:#3C1664:b]"
+		footerTextColor = "[white:#3C1664:-]"
 	} else {
-		footerNumberColor = "[black:white:b]"
-		footerTextColor = "[black:white:-]"
+		footerNumberColor = "[white:#3C1664:b]"
+		footerTextColor = "[white:#3C1664:-]"
 	}
 
+	var divfooter = "[#334455:#3C1664:b]"
+	
 	selected := ""
 	if len(ui.markedRows) > 0 {
 		selected = " Selected items: " + footerNumberColor +
@@ -144,12 +144,23 @@ func (ui *UI) showDir() {
 			" Total disk usage: " +
 			footerNumberColor +
 			ui.formatSize(totalUsage, true, false) +
+			divfooter +
+			"  ▏" +
+			footerNumberColor +
 			" Apparent size: " +
 			footerNumberColor +
 			ui.formatSize(totalSize, true, false) +
-			" Items: " + footerNumberColor + strconv.Itoa(itemCount) +
+			divfooter +
+			"  ▏" +
 			footerTextColor +
-			" Sorting by: " + ui.sortBy + " " + ui.sortOrder)
+			"  Items: " + 
+			footerNumberColor + 
+			strconv.Itoa(itemCount) +
+			divfooter +
+			"  ▏" +
+			footerNumberColor +
+			"  Sorting by: " + 
+			ui.sortBy + " " + ui.sortOrder)
 
 	ui.table.Select(0, 0)
 	ui.table.ScrollToBeginning()
@@ -172,8 +183,8 @@ func (ui *UI) showDevices() {
 
 	var textColor, sizeColor string
 	if ui.UseColors {
-		textColor = "[#3498db:-:b]"
-		sizeColor = "[#edb20a:-:b]"
+		textColor = "[white:-:b]"
+		sizeColor = "[white:-:b]"
 	} else {
 		textColor = "[white:-:b]"
 		sizeColor = "[white:-:b]"
@@ -193,11 +204,11 @@ func (ui *UI) showDevices() {
 
 	var footerNumberColor, footerTextColor string
 	if ui.UseColors {
-		footerNumberColor = "[#ffffff:#2479d0:b]"
-		footerTextColor = "[black:#2479d0:-]"
+		footerNumberColor = "[white:#3C1664:b]"
+		footerTextColor = "[white:#3C1664:-]"
 	} else {
-		footerNumberColor = "[black:white:b]"
-		footerTextColor = "[black:white:-]"
+		footerNumberColor = "[white:#3C1664:b]"
+		footerTextColor = "[white:#3C1664:-]"
 	}
 
 	ui.footerLabel.SetText(
@@ -237,15 +248,17 @@ func (ui *UI) showErr(msg string, err error) {
 
 func (ui *UI) showHelp() {
 	text := tview.NewTextView().SetDynamicColors(true)
-	text.SetBorder(true).SetBorderPadding(2, 2, 2, 2)
-	text.SetBorderColor(tcell.ColorDefault)
-	text.SetTitle(" gdu help ")
+	text.SetBorder(false).SetBorderPadding(1,0,1,0)
+	text.SetBorderColor(tcell.NewRGBColor(20,20,20))
+	text.SetTitle("")
+	text.SetBackgroundColor(tcell.NewRGBColor(20,20,20))
+
 	text.SetScrollable(true)
 
 	if ui.UseColors {
 		text.SetText(
 			strings.ReplaceAll(
-				strings.ReplaceAll(helpText, "[::b]", "[red]"),
+				strings.ReplaceAll(helpText, "[::b]", "[#bb0000]"),
 				"[white:black:-]",
 				"[white]",
 			),

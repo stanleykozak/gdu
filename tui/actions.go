@@ -38,10 +38,13 @@ func (ui *UI) ListDevices(getter device.DevicesInfoGetter) error {
 
 // AnalyzePath analyzes recursively disk usage for given path
 func (ui *UI) AnalyzePath(path string, parentDir fs.Item) error {
-	ui.progress = tview.NewTextView().SetText("Scanning...")
-	ui.progress.SetBorder(true).SetBorderPadding(2, 2, 2, 2)
-	ui.progress.SetTitle(" Scanning... ")
-	ui.progress.SetDynamicColors(true)
+	ui.progress = tview.NewTextView().SetDynamicColors(true)
+	ui.progress.SetBorder(false).SetBorderPadding(1,0,1,0)
+	ui.progress.SetBorderColor(tcell.NewRGBColor(20,20,20))
+	ui.progress.SetTitle("")
+	ui.progress.SetBackgroundColor(tcell.NewRGBColor(20,20,20))
+
+
 
 	flex := tview.NewFlex().
 		AddItem(nil, 0, 1, false).
@@ -87,10 +90,12 @@ func (ui *UI) AnalyzePath(path string, parentDir fs.Item) error {
 
 // ReadAnalysis reads analysis report from JSON file
 func (ui *UI) ReadAnalysis(input io.Reader) error {
-	ui.progress = tview.NewTextView().SetText("Reading analysis from file...")
-	ui.progress.SetBorder(true).SetBorderPadding(2, 2, 2, 2)
-	ui.progress.SetTitle(" Reading... ")
-	ui.progress.SetDynamicColors(true)
+	ui.progress = tview.NewTextView().SetDynamicColors(true)
+	ui.progress.SetBorder(false).SetBorderPadding(1,0,1,0)
+	ui.progress.SetBorderColor(tcell.NewRGBColor(20,20,20))
+	ui.progress.SetTitle("")
+	ui.progress.SetBackgroundColor(tcell.NewRGBColor(20,20,20))
+
 
 	flex := tview.NewFlex().
 		AddItem(nil, 0, 1, false).
@@ -233,7 +238,8 @@ func (ui *UI) showFile() *tview.TextView {
 	file := tview.NewTextView()
 	ui.currentDirLabel.SetText("[::b] --- " +
 		strings.TrimPrefix(selectedFile.GetPath(), build.RootPathPrefix) +
-		" ---").SetDynamicColors(true)
+		" ---").SetDynamicColors(true).SetBackgroundColor(tcell.NewRGBColor(20,20,20))
+
 
 	readNextPart := func(linesCount int) int {
 		var err error
@@ -264,7 +270,7 @@ func (ui *UI) showFile() *tview.TextView {
 			}
 			ui.currentDirLabel.SetText("[::b] --- " +
 				strings.TrimPrefix(ui.currentDirPath, build.RootPathPrefix) +
-				" ---").SetDynamicColors(true)
+				" ---").SetDynamicColors(true).SetBackgroundColor(tcell.NewRGBColor(20,20,20))
 			ui.pages.RemovePage("file")
 			ui.app.SetFocus(ui.table)
 			return event
@@ -309,37 +315,38 @@ func (ui *UI) showInfo() {
 	selectedFile := ui.table.GetCell(row, column).GetReference().(fs.Item)
 
 	if ui.UseColors {
-		numberColor = "[#e67100::b]"
+		numberColor = "[#00FF00::b]"
 	} else {
-		numberColor = "[::b]"
+		numberColor = "[#00FF00::b]"
 	}
 
-	linesCount := 12
+	linesCount := 10
 
 	text := tview.NewTextView().SetDynamicColors(true)
-	text.SetBorder(true).SetBorderPadding(2, 2, 2, 2)
-	text.SetBorderColor(tcell.ColorDefault)
-	text.SetTitle(" Item info ")
+	text.SetBorder(false).SetBorderPadding(1,0,1,0)
+	text.SetBackgroundColor(tcell.NewRGBColor(20,20,20))
+	text.SetBorderColor(tcell.NewRGBColor(20,20,20))
+ 	text.SetTitle("")
 
-	content += "[::b]Name:[::-] "
+	content += "[::b] Name:[::-] "
 	content += tview.Escape(selectedFile.GetName()) + "\n"
-	content += "[::b]Path:[::-] "
+	content += "[::b] Path:[::-] "
 	content += tview.Escape(
 		strings.TrimPrefix(selectedFile.GetPath(), build.RootPathPrefix),
 	) + "\n"
-	content += "[::b]Type:[::-] " + selectedFile.GetType() + "\n\n"
+	content += "[::b] Type:[::-] " + selectedFile.GetType() + "\n\n"
 
-	content += "   [::b]Disk usage:[::-] "
+	content += "   [::b] Disk usage:[::-] "
 	content += numberColor + ui.formatSize(selectedFile.GetUsage(), false, true)
 	content += fmt.Sprintf(" (%s%d[-::] B)", numberColor, selectedFile.GetUsage()) + "\n"
-	content += "[::b]Apparent size:[::-] "
+	content += "[::b] Apparent size:[::-] "
 	content += numberColor + ui.formatSize(selectedFile.GetSize(), false, true)
 	content += fmt.Sprintf(" (%s%d[-::] B)", numberColor, selectedFile.GetSize()) + "\n"
 
 	if selectedFile.GetMultiLinkedInode() > 0 {
 		linkedItems := ui.linkedItems[selectedFile.GetMultiLinkedInode()]
 		linesCount += 2 + len(linkedItems)
-		content += "\nHard-linked files:\n"
+		content += "\n Hard-linked files:\n"
 		for _, linkedItem := range linkedItems {
 			content += "\t" + linkedItem.GetPath() + "\n"
 		}
